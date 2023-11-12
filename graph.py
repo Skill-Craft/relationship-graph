@@ -18,14 +18,15 @@ def main(main_person: str, max_number: int):
 def update(connections: dict[int, set[str]], iteration: int, df: pd.DataFrame):
     already_connected = set()
     for element in connections.values():
-        already_connected = already_connected | element
+        already_connected.update(element)
     new_connections = set()
     for connection in connections[iteration-1]:
         all_names = set()
-        df[df['people'].str.find(connection) == 1]['people'].str.split(', ').apply(all_names.update)
+        df[df['people'].str.find(connection) != -1]['people'].str.split(', ').apply(all_names.update)
         for name in all_names:
+            name = name.strip(' ')
             if name not in already_connected:
-                new_connections.add(name.strip(' '))
+                new_connections.add(name)
     connections[iteration] = new_connections
 
 def rearrange(df: pd.DataFrame):
@@ -33,6 +34,7 @@ def rearrange(df: pd.DataFrame):
     aux.fillna(value={'director': '', 'cast':''}, inplace=True)
     aux['people'] = aux['director'] + ', ' + aux['cast']    
     aux = aux.loc[aux['people'] != ', ']
+    aux.people = aux.people.str.strip(', ')
     return aux
 
 if __name__ == "__main__":
