@@ -1,8 +1,7 @@
 import pathlib
 import pandas as pd
-import numpy as np
 import db
-import sys
+import json
 from pprint import pprint
 
 def main(main_person: str, max_number: int):
@@ -13,7 +12,8 @@ def main(main_person: str, max_number: int):
     for i in range(1, max_number+1):
         update(connections, i, df)
     connections = {i: list(conn) for i, conn in connections.items()}
-    pprint(connections)
+    with open('out.json', 'w') as file:
+        json.dump(connections, file, indent=4)
 
 def update(connections: dict[int, set[str]], iteration: int, df: pd.DataFrame):
     already_connected = set()
@@ -32,10 +32,12 @@ def update(connections: dict[int, set[str]], iteration: int, df: pd.DataFrame):
 def rearrange(df: pd.DataFrame):
     aux = df[['director', 'cast']]
     aux.fillna(value={'director': '', 'cast':''}, inplace=True)
-    aux['people'] = aux['director'] + ', ' + aux['cast']    
+    aux['people'] = aux['director'] + ', ' + aux['cast']   
     aux = aux.loc[aux['people'] != ', ']
     aux.people = aux.people.str.strip(', ')
     return aux
 
 if __name__ == "__main__":
-    main(sys.argv[1], int(sys.argv[2]))
+    name, max_number = None, None
+    with open('input.txt') as file: name, max_number = file.readlines()
+    main(name.strip('\n'), int(max_number))
