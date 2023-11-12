@@ -8,7 +8,7 @@ def read_db(path: pathlib.Path) -> pd.DataFrame:
         path.parent.mkdir(parents=True)
     if not path.exists():
         acquire_db(path.parent)
-        return pd.read_csv(path.absolute(), index_col=0)
+    return pd.read_csv(path.absolute(), index_col=0)
     
 def acquire_db(path: pathlib.Path):
     subprocess.run(
