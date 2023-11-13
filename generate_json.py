@@ -47,11 +47,10 @@ def update(connections: dict[int, set[str]], iteration: int, df: pd.DataFrame):
     connections[iteration] = new_connections
 
 def rearrange(df: pd.DataFrame):
-    aux = df[['director', 'cast', 'title']]
-    aux.fillna(value={'director': '', 'cast':''}, inplace=True)
-    aux['people'] = aux['director'] + ', ' + aux['cast']   
-    aux = aux.loc[aux['people'] != ', ']
-    aux.people = aux.people.str.strip(', ')
+    aux = df[['cast', 'title']]
+    aux = aux.loc[aux['cast'] != ', ']
+    aux.dropna(inplace=True)    
+    aux.cast = aux.cast.str.strip(', ')
     return aux
 
 if __name__ == "__main__":
