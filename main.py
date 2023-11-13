@@ -27,7 +27,10 @@ def main(inicial: str, final: str, max_iter: int):
     
     dic_index = {inicial: inicial}
     bfs(inicial, max_iter, aux, dic_index, final)
-    print(final_relation(final, dic_index))
+    res = final_relation(final, dic_index)
+    print("\nGrau de relacionamento:",len(final_relation(final, dic_index))//2, end='\n\n')
+    print("Relação:")
+    print(' -> '.join(res))
 
 
 def parser():
